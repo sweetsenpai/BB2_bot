@@ -30,9 +30,9 @@ class Subcategories(Base):
 
 
 class Sub_Masters(Base):
-    __tablename__ = 'bsite_masters_sub_masters'
+    __tablename__ = 'bsite_masters_sub_master'
     id = sql.Column(name='id', type_=sql.Integer, primary_key=True)
-    master_id = sql.Column(name='master_id', type_=sql.Integer, primary_key=True)
+    masters_id = sql.Column(name='masters_id', type_=sql.Integer, primary_key=True)
     subcategories_id = sql.Column(name='subcategories_id', type_=sql.Integer, primary_key=True)
 
     def __str__(self):
@@ -54,22 +54,46 @@ class Masters(Base):
     password = sql.Column(name='password', type_=sql.String)
     username = sql.Column(name='username', type_=sql.String)
     visability = sql.Column(name='visability', type_=sql.String)
+    need_moderation = sql.Column(name='need_moderation', type_=sql.Boolean)
 
     def __str__(self):
         return f'{self.master_id},  {self.name}, {self.phone}, {self.address}, {self.tg}, ' \
                f'{self.wa}, {self.ig}, {self.visability}'
 
+    def tg_msg(self):
+        msg = ''
+        msg += f'{self.name}\n'
+        if self.info is not None or self.info != '':
+            msg += f'\n{self.info}\n'
+        if self.address is not None or self.address != '':
+            msg += f'Адрес: {self.address}\n'
+        msg += '\nКонтакты\n\n'
+        if self.tg is not None or self.tg != '':
+            msg += f'Telegram: {self.tg}\n'
+
+        if self.wa is not None or self.wa != '':
+            msg += f'Whatsapp: {self.wa}\n'
+
+        if self.vk is not None or self.vk != '':
+            msg += f'VK: {self.vk}\n'
+
+        if self.ig is not None or self.ig != '':
+            msg += f'Instagram: {self.ig}\n'
+
+        return msg
+
 
 class Images(Base):
     __tablename__ = 'bsite_images'
     img_id = sql.Column(name='img_id',  type_=sql.Integer, primary_key=True)
-    master_img = sql.Column(name='master_img',  type_=sql.Integer)
+    master_img_id = sql.Column(name='master_img_id',  type_=sql.Integer)
     img_url = sql.Column(name='img_url', type_=sql.String)
     file_id = sql.Column(name='file_id', type_=sql.String)
+    telegram_file_id = sql.Column(name='telegram_file_id', type_=sql.String)
     description = sql.Column(name='description', type_=sql.String)
 
     def __str__(self):
-        return f'{self.img_id}, {self.master_img}, {self.img_url}, {self.description}'
+        return f'{self.img_id}, {self.master_img}, {self.img_url}, {self.description}, {self.telegram_file_id}'
 
 
 Session = sessionmaker(bind=engine)

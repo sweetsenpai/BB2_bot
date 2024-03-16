@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  telegram:
+    build: .
+    ports:
+      - "8000:8000"
+    command: python main.py
+    restart: on-failure
+    volumes:
+    - .:/bot
