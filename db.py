@@ -12,8 +12,6 @@ class Categories(Base):
     __tablename__ = 'bsite_categories'
     cat_id = sql.Column(name='cat_id', type_=sql.Integer, primary_key=True)
     cat_name = sql.Column(name='cat_name', type_=sql.String)
-    # cat_id = models.AutoField(primary_key=True)
-    # cat_name = models.CharField(max_length=200, help_text='Добавь новую категорию')
 
     def __str__(self):
         return f'{self.cat_id},{self.cat_name}'
@@ -42,7 +40,6 @@ class Sub_Masters(Base):
 class Masters(Base):
     __tablename__ = 'bsite_masters'
     master_id = sql.Column(name='master_id',  type_=sql.Integer, primary_key=True)
-#    sub_master = sql.Column(name='sub_master', type_=sql.Integer)
     name = sql.Column(name='name', type_=sql.String)
     info = sql.Column(name='info', type_=sql.String)
     phone = sql.Column(name='phone', type_=sql.String)
@@ -55,29 +52,30 @@ class Masters(Base):
     username = sql.Column(name='username', type_=sql.String)
     visability = sql.Column(name='visability', type_=sql.String)
     need_moderation = sql.Column(name='need_moderation', type_=sql.Boolean)
+    msg_sended = sql.Column(name='msg_sended', type_=sql.Boolean)
 
     def __str__(self):
         return f'{self.master_id},  {self.name}, {self.phone}, {self.address}, {self.tg}, ' \
-               f'{self.wa}, {self.ig}, {self.visability}'
+               f'{self.wa},{self.ig}, {self.vk},{self.visability}'
 
     def tg_msg(self):
         msg = ''
         msg += f'{self.name}\n'
-        if self.info is not None or self.info != '':
+        if self.info is not None or self.info.replace(' ', '') != '':
             msg += f'\n{self.info}\n'
-        if self.address is not None or self.address != '':
+        if self.address is not None or self.address != '' or self.address != ' ':
             msg += f'Адрес: {self.address}\n'
         msg += '\nКонтакты\n\n'
-        if self.tg is not None or self.tg != '':
+        if self.tg is not None or self.tg != '' or self.tg != ' ':
             msg += f'Telegram: {self.tg}\n'
 
-        if self.wa is not None or self.wa != '':
+        if self.wa is not None or self.wa != '' or self.wa != ' ':
             msg += f'Whatsapp: {self.wa}\n'
 
-        if self.vk is not None or self.vk != '':
+        if self.vk is not None or self.vk.replace(' ', '') != '':
             msg += f'VK: {self.vk}\n'
 
-        if self.ig is not None or self.ig != '':
+        if self.ig is not None or self.ig != '' or self.ig != ' ':
             msg += f'Instagram: {self.ig}\n'
 
         return msg
@@ -98,3 +96,4 @@ class Images(Base):
 
 Session = sessionmaker(bind=engine)
 session = Session()
+

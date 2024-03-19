@@ -1,5 +1,5 @@
 import os
-
+from sqlalchemy import and_
 import telegram.error
 from dotenv import load_dotenv
 from telegram.ext import Application, CallbackQueryHandler, MessageHandler, \
@@ -22,10 +22,12 @@ async def store_img(context: ContextTypes.DEFAULT_TYPE):
 
 
 async def master_moderation(context: ContextTypes.DEFAULT_TYPE):
-    masters_for_mod = session.query(Masters).where(Masters.need_moderation == True).all()
+    masters_for_mod = session.query(Masters).where(and_(Masters.need_moderation == True, Masters.msg_sended == False)).all()
     for master in masters_for_mod:
         await context.bot.send_message(chat_id=os.environ.get("MYID"), text='Мастер обновил свой профиль!')
         await context.bot.send_message(chat_id=os.environ.get("MYID"), text=master.tg_msg(), reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text='Сделать видимым', callback_data=f'V:{master.master_id}')]]))
+        master.msg_sended = True
+        session.commit()
     return
 
 
